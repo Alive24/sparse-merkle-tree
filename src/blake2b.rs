@@ -1,5 +1,12 @@
 use crate::{traits::Hasher, H256};
-use blake2b_rs::{Blake2b, Blake2bBuilder};
+#[cfg(feature = "ckb-contract")]
+pub use blake2b_ref::{Blake2b, Blake2bBuilder};
+
+#[cfg(all(not(feature = "ckb-contract"), target_family = "wasm"))]
+pub use blake2b_ref::{Blake2b, Blake2bBuilder};
+
+#[cfg(all(not(feature = "ckb-contract"), not(target_family = "wasm")))]
+pub use blake2b_rs::{Blake2b, Blake2bBuilder};
 
 const BLAKE2B_KEY: &[u8] = &[];
 const BLAKE2B_LEN: usize = 32;

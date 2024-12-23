@@ -17,16 +17,15 @@ include = [
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-default = ["std"]
+default = ["std", "blake2b-ref", "blake2b-rs"]
+ckb-contract = [
+    "blake2b-ref",
+]
 std = []
 # SMT implemented in C
 smtc = []
 # A storage optimized SMT implemented in trie (https://ouvrard-pierre-alain.medium.com/sparse-merkle-tree-86e6e2fc26da)
 trie = []
-
-[dependencies]
-cfg-if = "1"
-blake2b-rs = "0.2"
 
 [dev-dependencies]
 proptest = "0.9"
@@ -47,3 +46,13 @@ harness = false
 
 [build-dependencies]
 cc = "1.0"
+
+[target.'cfg(not(target_family = "wasm"))'.dependencies]
+blake2b-rs = { version = "0.2", optional = true }
+
+[target.'cfg(target_family = "wasm")'.dependencies]
+blake2b-ref = { version = "0.3", optional = true }
+
+[dependencies]
+blake2b-ref = { version = "0.3", optional = true }
+cfg-if = "1"
